@@ -15,6 +15,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,18 +58,30 @@ private fun LoginButton() {
 
 @Composable
 private fun PasswordField() {
+    /* La función especial de Jetpack Compose llamada rebember, la primera vez que se ejecute
+       creará el mutableStateOf, pero las siguientes veces utilizará el valor previo.
+       by --> Delegado. Para actualizar directamente el estado sin tener que utilizar el .value
+     */
+    var pass by remember { mutableStateOf("") }
+
     OutlinedTextField(
-        value = "",
-        onValueChange = { },
+        value = pass,
+        onValueChange = { pass = it },
+        singleLine = true,
+        maxLines = 1,
         label = { Text(text = "Password") }
     )
 }
 
 @Composable
 private fun UserField() {
+    var user by remember { mutableStateOf("") }
+
     OutlinedTextField(
-        value = "",
-        onValueChange = {},
+        value = user,
+        onValueChange = { user = it },
+        singleLine = true,
+        maxLines = 1,
         label = { Text(text = "User") }
     )
 }
