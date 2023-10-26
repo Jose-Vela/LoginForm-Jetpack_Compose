@@ -42,31 +42,40 @@ fun LoginForm() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
         ){
-            UserField()
-            PasswordField()
-            LoginButton()
+            /* La función especial de Jetpack Compose llamada rebember, la primera vez que se ejecute
+               creará el mutableStateOf, pero las siguientes veces utilizará el valor previo.
+               by --> Delegado. Para actualizar directamente el estado sin tener que utilizar el .value
+            */
+            var user by remember { mutableStateOf("") }
+            var pass by remember { mutableStateOf("") }
+            val buttonEnabled = user.isNotEmpty() && pass.isNotEmpty()
+
+            UserField(value = user, onValueChange = { user = it })
+            PasswordField(value = pass, onValueChange = { pass = it })
+            LoginButton(buttonEnabled)
         }
     }
 }
 
 @Composable
-private fun LoginButton() {
-    Button(onClick = { /*TODO*/ }) {
+private fun LoginButton(enabled: Boolean) {
+    Button(
+        onClick = { /*TODO*/ },
+        enabled = enabled
+    ) {
         Text(text = "Login")
     }
 }
 
 @Composable
-private fun PasswordField() {
-    /* La función especial de Jetpack Compose llamada rebember, la primera vez que se ejecute
-       creará el mutableStateOf, pero las siguientes veces utilizará el valor previo.
-       by --> Delegado. Para actualizar directamente el estado sin tener que utilizar el .value
-     */
-    var pass by remember { mutableStateOf("") }
+private fun PasswordField(
+    value: String,
+    onValueChange: (String) -> Unit
+) {
 
     OutlinedTextField(
-        value = pass,
-        onValueChange = { pass = it },
+        value = value,
+        onValueChange = onValueChange,
         singleLine = true,
         maxLines = 1,
         label = { Text(text = "Password") }
@@ -74,12 +83,14 @@ private fun PasswordField() {
 }
 
 @Composable
-private fun UserField() {
-    var user by remember { mutableStateOf("") }
+private fun UserField(
+    value: String,
+    onValueChange: (String) -> Unit
+) {
 
     OutlinedTextField(
-        value = user,
-        onValueChange = { user = it },
+        value = value,
+        onValueChange = onValueChange,
         singleLine = true,
         maxLines = 1,
         label = { Text(text = "User") }
