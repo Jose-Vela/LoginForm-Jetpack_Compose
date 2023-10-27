@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.example.loginformjetpackcompose
 
@@ -8,8 +8,13 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -21,6 +26,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.loginformjetpackcompose.ui.theme.LoginFormJetpackComposeTheme
@@ -72,13 +79,20 @@ private fun PasswordField(
     value: String,
     onValueChange: (String) -> Unit
 ) {
-
+    var passVisible by remember { mutableStateOf(false) }
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         singleLine = true,
         maxLines = 1,
-        label = { Text(text = "Password") }
+        label = { Text(text = "Password") },
+        visualTransformation = if(passVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        trailingIcon = {
+            IconToggleButton(checked = passVisible, onCheckedChange = { passVisible = it }) {
+                val icon = if(passVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility
+                Icon(imageVector = icon, contentDescription = null)
+            }
+        }
     )
 }
 
