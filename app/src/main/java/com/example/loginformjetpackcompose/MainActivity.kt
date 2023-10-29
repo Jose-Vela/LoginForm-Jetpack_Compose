@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
@@ -30,20 +31,55 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.loginformjetpackcompose.ui.theme.LoginFormJetpackComposeTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            LoginForm()
+            // Creamos una variable para controlar la navegación (navController).
+            // La función rememberNavController() es similar a remember, pero específicamente para el NavController
+            val navController = rememberNavController()
+            // Dentro de la función NavHost, definiremos el grafo de navegación de la aplicación
+            NavHost(navController, startDestination = "login"){ // startDestination: indica la primera pantalla que tendrá que cargar
+                // Con la función composable() definimos una ruta y lo que tendrá que cargar.
+                composable("login"){
+                    LoginForm(
+                        onLogin = {
+                            navController.navigate("main")
+                        }
+                    )
+                }
+
+                composable("main"){
+                    Main()
+                }
+
+            }
         }
     }
 }
 
 @Preview
 @Composable
-fun LoginForm() {
+fun Main() {
+    Screan {
+        Box(
+            contentAlignment = Alignment.Center
+        ){
+            Text(
+                text = "Main Screen",
+                style = MaterialTheme.typography.headlineLarge
+            )
+        }
+    }
+}
+
+@Composable
+fun LoginForm(onLogin: () -> Unit) {
     Screan {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -59,15 +95,15 @@ fun LoginForm() {
 
             UserField(value = user, onValueChange = { user = it })
             PasswordField(value = pass, onValueChange = { pass = it })
-            LoginButton(buttonEnabled)
+            LoginButton(buttonEnabled, onLogin)
         }
     }
 }
 
 @Composable
-private fun LoginButton(enabled: Boolean) {
+private fun LoginButton(enabled: Boolean, onLogin: () -> Unit) {
     Button(
-        onClick = { /*TODO*/ },
+        onClick = onLogin,
         enabled = enabled
     ) {
         Text(text = "Login")
