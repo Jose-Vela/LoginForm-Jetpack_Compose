@@ -45,17 +45,20 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             // Dentro de la función NavHost, definiremos el grafo de navegación de la aplicación
             NavHost(navController, startDestination = "login"){ // startDestination: indica la primera pantalla que tendrá que cargar
-                // Con la función composable() definimos una ruta y lo que tendrá que cargar.
+                // En la función composable() definimos una ruta de destino (por parametro), que el navController utilizará para dirigirse.
                 composable("login"){
+                    // Dentro de esta misma funcion composable() indicamos el (o los) composables que tendrá que cargar.
                     LoginForm(
                         onLogin = {
-                            navController.navigate("main")
+                            // Cuando se ejecute la función onLogin, es decir onClick de LoginButton,
+                            // el navController cambiará su navegación hacia la ruta "main":
+                            navController.navigate("main")  // llamará a composable(route = "main")
                         }
                     )
                 }
 
                 composable("main"){
-                    Main()
+                    Main()  // Contiene los composables para la pantalla despues del login.
                 }
 
             }
